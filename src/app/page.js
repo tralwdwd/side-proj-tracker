@@ -5,7 +5,6 @@ import DeleteIcon, { ThemeIcon } from "./images";
 import { toast } from "react-hot-toast";
 import { useTheme } from "./theme";
 import {
-  databases,
   instance,
 } from "./auth";
 import Modal from "./Modal";
@@ -27,7 +26,7 @@ export default function Home() {
 
   const refreshProjects = async () => {
     setIsLoadingProjects(true);
-    let d = await databases.listDocuments("public", "projects");
+    let d = await instance.databases.listDocuments("public", "projects");
     setProjects(d.documents);
     setHasProjects(d.documents.length > 0);
     setIsLoadingProjects(false);
