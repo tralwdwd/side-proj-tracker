@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Image from 'next/image'
 import { toast } from 'react-hot-toast';
 import { v4 as uuidv4 } from 'uuid';
-import { account, appClient, client, databases, isAuthenticated } from './auth';
+import { instance } from './auth';
 import { ID, Permission, Role } from "appwrite";
 
 const CreationModal = ({ refreshProjects, isModalVisible, onDismiss }) => {
@@ -13,8 +13,8 @@ const CreationModal = ({ refreshProjects, isModalVisible, onDismiss }) => {
 
   const handleCreate = async () =>{
     if(projectName.trim() !== '' && projectDescription.trim() !== ''){
-      let a = await account.get()
-      await databases.createDocument(
+      let a = await instance.account.get()
+      await instance.database.createDocument(
         "public",
         "projects",
         ID.unique(),
