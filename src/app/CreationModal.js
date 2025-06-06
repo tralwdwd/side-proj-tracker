@@ -14,7 +14,7 @@ const CreationModal = ({ refreshProjects, isModalVisible, onDismiss }) => {
   const handleCreate = async () =>{
     if(projectName.trim() !== '' && projectDescription.trim() !== ''){
       let a = await instance.account.get()
-      await instance.database.createDocument(
+      await instance.databases.createDocument(
         "public",
         "projects",
         ID.unique(),
