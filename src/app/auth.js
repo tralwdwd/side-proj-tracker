@@ -1,15 +1,9 @@
 import { Account, Client, Databases, ID } from "appwrite";
 import { redirect } from "next/navigation";
 
-export const appClient = new Client().setEndpoint("https://api.tralwdwd.xyz/v1").setProject("6838ac5a0001d4c614a6")
-
-export const account = new Account(appClient)
-
-export const databases = new Databases(appClient)
-
 class AppWriterInstance {
     constructor () {
-        this.client = new Client().setEndpoint("https://api.tralwdwd.xyz/v1").setProject("6838ac5a0001d4c614a6")
+        this.client = new Client().setEndpoint("https://fra.cloud.appwrite.io/v1").setProject("6838ac5a0001d4c614a6")
         this.account = new Account(this.client)
         this.databases = new Databases(this.client)
     }
