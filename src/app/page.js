@@ -172,7 +172,7 @@ export default function Home() {
           }}
           successLabelClassName="bg-red-500"
           onSuccess={async () => {
-            await databases.deleteDocument("public", "projects", deletionId);
+            await instance.databases.deleteDocument("public", "projects", deletionId);
             toast.success(`'${deletionName}' deleted successfully!`);
             setDeletionName("");
             setDeletionId("");
