@@ -9,7 +9,7 @@ import {
 } from "./auth";
 import Modal from "./Modal";
 import CreationModal from "./CreationModal";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 export default function Home() {
   const [isCreationModalVisible, setIsCreationModalVisible] = useState(false);
@@ -23,6 +23,12 @@ export default function Home() {
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [isLoadingProjects, setIsLoadingProjects] = useState(true);
   const [user, setUser] = useState({});
+  const router = useRouter();
+  const statusLabels = {
+  not_started: "Not Started",
+  completed: "Completed",
+  progress: "In Progress",
+};
 
   const refreshProjects = async () => {
     setIsLoadingProjects(true);
@@ -98,37 +104,6 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center min-h-screen p-3 sm:p-3 font-[family-name:var(--font-geist-sans)] space-y-4">
-      {isLoggedIn ? (
-        <div className="flex justify-between w-full items-center">
-          {isLoadingProjects ? (
-            <div
-              key={0}
-              className="animate-pulse dark:bg-transparent bg-transparent p-4 rounded-lg shadow-md w-full"
-            >
-              <div className="h-6 bg-gray-300 dark:bg-gray-600 rounded w-1/8 mb-2"></div>
-            </div>
-          ) : (
-            <h2>
-              {user.name} - {user.email}{" "}
-            </h2>
-          )}
-          <a
-            className="text-blue-500 hover:text-blue-300 hover:cursor-pointer"
-            onClick={() => {
-              instance.logout();
-            }}
-          >
-            Logout
-          </a>
-        </div>
-      ) : (
-        <button
-          className="flex items-stretch justify-center bg-blue-500 hover:bg-blue-700 text-white font-bold rounded px-4 py-2 cursor-pointer"
-          onClick={() => redirect("/login")}
-        >
-          Login
-        </button>
-      )}
       <h1 className="text-3xl mt-5 font-bold text-center text-black dark:text-white">
         Side Project Tracker
       </h1>
@@ -217,6 +192,7 @@ export default function Home() {
                     {project.name}
                   </h3>
                   <p className="text-gray-400 text-xl">{project.description}</p>
+                  <p>Status: {statusLabels[project.status]}</p>
                   <button
                     className="del flex items-center justify-center text-red-500 hover:text-red-300 cursor-pointer"
                     onClick={() => handleDelete(project.$id)}
@@ -227,6 +203,12 @@ export default function Home() {
                       height={10}
                       className="ml-2 fill-red-500 h-10 w-5 hover:fill-red-300"
                     />
+                  </button>
+                  <button
+                    className="del flex items-center justify-center text-blue-500 hover:text-blue-300 hover:cursor-pointer"
+                    onClick={() => router.push(`/project/${project.$id}`)}
+                  >
+                    Project Details (experimental)
                   </button>
                   <p className="text-gray-400 text-[10px]">
                     Project ID: {project.$id}

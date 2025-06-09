@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 
 class AppWriterInstance {
     constructor () {
-        this.client = new Client().setEndpoint("https://api.tralwdwd.xyz/v1").setProject("6838ac5a0001d4c614a6")
+        this.client = new Client().setEndpoint("https://api.tralwdwd.dev/v1").setProject("6838ac5a0001d4c614a6")
         this.account = new Account(this.client)
         this.databases = new Databases(this.client)
     }
