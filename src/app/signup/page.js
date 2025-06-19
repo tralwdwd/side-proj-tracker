@@ -1,9 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { AuthError } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { AppwriteException, ID } from "appwrite";
 import { auth } from "../apiclient";
 
 
