@@ -2,8 +2,8 @@
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "./theme";
 import { useLayoutEffect, useState } from "react";
-import { instance } from "./auth";
 import { useRouter } from "next/navigation";
+import { auth } from "./apiclient";
 
 export default function ClientLayout({ children }) {
   const [user, setUser] = useState({});
@@ -11,13 +11,10 @@ export default function ClientLayout({ children }) {
   const router = useRouter();
 
   useLayoutEffect(() => {
-    function popUlate() {
-      instance.accountDetails().then((d) => {
-        setUser(d);
-        setIsLoggedIn(true)
-      }).catch(() => {
-        setIsLoggedIn(false)
-      });
+    async function popUlate() {
+      setIsLoggedIn(await auth.isLoggedIn())
+      setUser(await auth.currentUser())
+      console.log(await auth.currentUser())
     }
     popUlate();
   }, []);
@@ -36,13 +33,13 @@ export default function ClientLayout({ children }) {
       />
       <div className="flex justify-between w-full items-center p-2">
         <h2>
-          {isLoggedIn ? `${user.name} - ${user.email}` : ""}
+          {isLoggedIn ? `${user.username} - ${user.email}` : ""}
         </h2>
         {isLoggedIn ? (
           <a
             className="text-blue-500 hover:text-blue-300 hover:cursor-pointer"
-            onClick={() => {
-              instance.logout();
+            onClick={async() => {
+              await auth.logout()
               setUser({});
               setIsLoggedIn(false)
             }}

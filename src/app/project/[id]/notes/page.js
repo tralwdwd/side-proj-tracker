@@ -1,27 +1,22 @@
 "use client";
 import { useParams } from "next/navigation";
-import { instance } from "@/app/auth";
 import { useEffect, useState } from "react";
-import { ID, Permission, Role} from "appwrite";
 import DeleteIcon from "@/app/images"
 import toast from "react-hot-toast";
+import { data } from "@/app/apiclient";
 
 export default function Page() {
   const { id } = useParams();
-  const [project, setProject] = useState({name:"",description:"",notes: []})
+  const [notes, setNotes] = useState({content:"", ID: 0})
   const [note, setNote] = useState("")
   const [hasNotes, setHasNotes] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
   const refreshNotes = async () => {
     setIsLoading(true)
-    let proj = await instance.databases.getDocument(
-        "public",
-        "projects",
-        id
-      );
-    setProject(proj)
-    setHasNotes(proj.notes.length > 0)
+    let notes = await data.getNoteList(id)
+    setNotes(notes)
+    setHasNotes(notes.length > 0)
     setIsLoading(false)
   }
 
@@ -31,23 +26,7 @@ export default function Page() {
       return;
     }
     
-    let a = await instance.accountDetails()
-
-    await instance.databases.createDocument(
-        "public",
-        "6843a7770017b083d3d3", //notes collection,
-        ID.unique(),
-        {
-          text: note,
-          project: project.$id
-        },
-        [
-          Permission.read(Role.user(a.$id)),
-          Permission.update(Role.user(a.$id)),
-          Permission.delete(Role.user(a.$id))
-        ]
-
-    )
+    await data.newNote(note, id)
     toast.success("Note created.")
     setNote("")
 
@@ -55,18 +34,13 @@ export default function Page() {
   }
 
   const handleDelete = async (id) => {
-    await instance.databases.deleteDocument(
-      "public",
-      "6843a7770017b083d3d3", //notes collection
-      id
-    )
+    await data.deleteNote(id)
     toast.success("Note deleted.")
     refreshNotes()
   }
 
   useEffect(()=>{
     async function getProject(){
-      //let a = await instance.account.get()
 
       refreshNotes()
 
@@ -104,23 +78,23 @@ export default function Page() {
       <>
       {hasNotes ?
       <>
-        {project.notes.map((note, index) => (
+        {notes.map((note, index) => (
         <div
           key={index}
           className="dark:bg-gray-700 bg-white p-4 rounded-lg shadow-md w-full flex items-center"
         >
           <div className="flex-1">
             <h3 className="text-2xl font-semibold dark:text-white text-black">
-              {note.text}
+              {note.content}
             </h3>
             <p className="text-gray-400 text-[10px]">
-              Note ID: {note.$id}
+              Note ID: {note.id}
             </p>
           </div>
           <button
             className="ml-2 p-1 h-[calc(100%-0.5rem)] flex items-center justify-center rounded hover:bg-red-100 dark:hover:bg-gray-600 hover:cursor-pointer"
             style={{ alignSelf: "stretch" }}
-            onClick={() => handleDelete(note.$id)} // Uncomment and implement if needed
+            onClick={() => handleDelete(note.uuid)} // Uncomment and implement if needed
           >
             <DeleteIcon
               width={24}

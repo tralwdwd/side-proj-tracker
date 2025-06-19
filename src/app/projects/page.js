@@ -1,15 +1,13 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useState, useLayoutEffect } from "react";
-import DeleteIcon, { ThemeIcon } from "./images";
+import DeleteIcon, { ThemeIcon } from "../images";
 import { toast } from "react-hot-toast";
-import { useTheme } from "./theme";
-import {
-  instance,
-} from "./auth";
-import Modal from "./Modal";
-import CreationModal from "./CreationModal";
+import { useTheme } from "../theme";
+import Modal from "../Modal";
+import CreationModal from "../CreationModal";
 import { redirect, useRouter } from "next/navigation";
+import { auth, data } from "../apiclient";
 
 export default function Home() {
   const [isCreationModalVisible, setIsCreationModalVisible] = useState(false);
@@ -32,16 +30,15 @@ export default function Home() {
 
   const refreshProjects = async () => {
     setIsLoadingProjects(true);
-    let d = await instance.databases.listDocuments("public", "projects");
-    setProjects(d.documents);
-    setHasProjects(d.documents.length > 0);
+    let p = await data.getProjectList()
+    setProjects(p)
+    setHasProjects(p.length > 0)
     setIsLoadingProjects(false);
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id, name) => {
     setDeletionId(id);
-    let proj = await instance.databases.getDocument("public", "projects", id);
-    setDeletionName(proj.name);
+    setDeletionName(name);
     setIsDeletionModalVisible(true);
   };
 
@@ -75,22 +72,19 @@ export default function Home() {
 
   useLayoutEffect(() => {
     async function getSessionDetails() {
-      instance.isLoggedIn().then((r) => {
-        if (r) {
+      let r = await auth.isLoggedIn()
+      if (r) {
           refreshProjects();
-          function popUlate() {
-            instance.accountDetails().then((d) => {
-              setUser(d);
-            });
+          async function popUlate() {
+            setUser(await auth.currentUser())
           }
           popUlate();
           setLoggedIn(true);
-        } else {
-          window.location.replace("/login");
+      } else {
+          alert(r)          
           setLoggedIn(false);
           return;
-        }
-      });
+      }
     }
     getSessionDetails();
   }, []);
@@ -147,7 +141,7 @@ export default function Home() {
           }}
           successLabelClassName="bg-red-500"
           onSuccess={async () => {
-            await instance.databases.deleteDocument("public", "projects", deletionId);
+            await data.deleteProject(deletionId)
             toast.success(`'${deletionName}' deleted successfully!`);
             setDeletionName("");
             setDeletionId("");
@@ -195,7 +189,7 @@ export default function Home() {
                   <p>Status: {statusLabels[project.status]}</p>
                   <button
                     className="del flex items-center justify-center text-red-500 hover:text-red-300 cursor-pointer"
-                    onClick={() => handleDelete(project.$id)}
+                    onClick={() => handleDelete(project.id, project.name)}
                   >
                     Delete
                     <DeleteIcon
@@ -206,12 +200,12 @@ export default function Home() {
                   </button>
                   <button
                     className="del flex items-center justify-center text-blue-500 hover:text-blue-300 hover:cursor-pointer"
-                    onClick={() => router.push(`/project/${project.$id}`)}
+                    onClick={() => router.push(`/project/${project.id}`)}
                   >
                     Project Details (experimental)
                   </button>
                   <p className="text-gray-400 text-[10px]">
-                    Project ID: {project.$id}
+                    Project ID: {project.id}
                   </p>
                 </div>
               ))}

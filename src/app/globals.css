@@ -29,17 +29,12 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-*::-webkit-scrollbar-thumb {
-  background-color: var(--modal-background);
-  border-radius: 0px;
-  width: 100px;
 
+::-webkit-scrollbar {
+  width: 5px;
 }
 
-*::-webkit-scrollbar-button {
-  display: none;
-}
-
-.del:hover svg {
-  fill: var(--color-red-300);
+::-webkit-scrollbar-thumb {
+  background-color: var(--foreground);
+  border-radius: 1.5px;
 }

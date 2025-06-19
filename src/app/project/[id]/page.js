@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useParams, usePathname } from "next/navigation";
-import { instance } from "@/app/auth";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { data } from "@/app/apiclient";
 
 export default function ProjectPage() {
   const { id } = useParams()
@@ -14,26 +14,17 @@ export default function ProjectPage() {
   const [status, setStatus] = useState("not_started");
 
   const updateDetails = async () => {
-    await instance.databases.updateDocument(
-        "public",
-        "projects",
-        id,
-        {
+    data.updateProject(id, {
             name,
             description,
             status
-        }
-    )
+        })
     toast.success("Project Saved.")
   } 
 
   useEffect(()=>{
     async function init(){
-        let proj = await instance.databases.getDocument(
-            "public",
-            "projects",
-            id
-        );
+        let proj = await data.getProjectDetails(id)
         setName(proj.name)
         setDescription(proj.description)
         setStatus(proj.status)

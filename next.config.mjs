@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    reactStrictMode: true
+    reactStrictMode: true,
+    serverExternalPackages: ["sequelize", "pg", "fs"]
 };
 
 export default nextConfig;
