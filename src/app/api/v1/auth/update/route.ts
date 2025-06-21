@@ -10,7 +10,7 @@ export async function POST(request) {
 
   const { email, username, password } = await request.json();
 
-  const user = await User.findByPk(userId);
+  const user = await User.findByPk(userId as string | undefined);
   if (!user) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
