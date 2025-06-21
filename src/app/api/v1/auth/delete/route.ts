@@ -8,7 +8,7 @@ export async function DELETE(request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const user = await User.findByPk(userId);
+  const user = await User.findByPk(userId as string | undefined);
   if (!user) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
