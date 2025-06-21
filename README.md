@@ -5,3 +5,6 @@ Ever wanted a way to manage all those side projects you created? Side Project Tr
 It uses authentication for saving and fetching your projects!
 
 You can add a title and a description to easily find your project!
+
+
+New backend version is broken, can not work on it right now.
