@@ -1,7 +1,9 @@
 import { Sequelize, DataTypes } from "sequelize";
+import pg from "pg";
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialect: "postgres", // or "sqlite"
+  dialect: "postgres",
+  dialectModule: pg,
   logging: false,
 });
 
