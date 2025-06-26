@@ -94,7 +94,7 @@ export default function Page() {
           <button
             className="ml-2 p-1 h-[calc(100%-0.5rem)] flex items-center justify-center rounded hover:bg-red-100 dark:hover:bg-gray-600 hover:cursor-pointer"
             style={{ alignSelf: "stretch" }}
-            onClick={() => handleDelete(note.uuid)} // Uncomment and implement if needed
+            onClick={() => handleDelete(note.id)} // Uncomment and implement if needed
           >
             <DeleteIcon
               width={24}
