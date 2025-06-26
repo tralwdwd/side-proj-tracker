@@ -33,8 +33,8 @@ export default function Page() {
     refreshNotes();
   }
 
-  const handleDelete = async (id) => {
-    await data.deleteNote(id)
+  const handleDelete = async (note) => {
+    await data.deleteNote(note, id)
     toast.success("Note deleted.")
     refreshNotes()
   }
@@ -92,14 +92,14 @@ export default function Page() {
             </p>
           </div>
           <button
-            className="ml-2 p-1 h-[calc(100%-0.5rem)] flex items-center justify-center rounded hover:bg-red-100 dark:hover:bg-gray-600 hover:cursor-pointer"
+            className="group ml-2 p-1 h-[calc(100%-0.5rem)] flex items-center justify-center rounded hover:bg-red-100 dark:hover:bg-gray-600 hover:cursor-pointer"
             style={{ alignSelf: "stretch" }}
             onClick={() => handleDelete(note.id)} // Uncomment and implement if needed
           >
             <DeleteIcon
               width={24}
               height={24}
-              className="fill-red-500 hover:fill-red-300"
+              className="fill-red-500 group-hover:fill-red-300"
             />
           </button>
         </div>

@@ -188,14 +188,14 @@ export default function Home() {
                   <p className="text-gray-400 text-xl">{project.description}</p>
                   <p>Status: {statusLabels[project.status]}</p>
                   <button
-                    className="del flex items-center justify-center text-red-500 hover:text-red-300 cursor-pointer"
+                    className="group del flex items-center justify-center text-red-500 hover:text-red-300 cursor-pointer"
                     onClick={() => handleDelete(project.id, project.name)}
                   >
                     Delete
                     <DeleteIcon
                       width={10}
                       height={10}
-                      className="ml-2 fill-red-500 h-10 w-5 hover:fill-red-300"
+                      className="ml-2 fill-red-500 h-10 w-5 group-hover:fill-red-300"
                     />
                   </button>
                   <button

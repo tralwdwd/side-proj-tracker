@@ -84,8 +84,8 @@ const data = {
         return (await request(`/notes/${project_uuid}/new`, "POST", { content }));
     },
 
-    deleteNote: async (uuid) => {
-        return await request(`/notes/${uuid}/delete`, "DELETE");
+    deleteNote: async (uuid, project_uuid) => {
+        return await request(`/notes/${project_uuid}/delete/${uuid}`, "DELETE");
     },
 };
 
