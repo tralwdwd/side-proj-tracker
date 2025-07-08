@@ -2,26 +2,24 @@
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "./theme";
 import { useLayoutEffect, useState } from "react";
-import { instance } from "./auth";
 import { useRouter } from "next/navigation";
+import { auth } from "./apiclient";
 
 export default function ClientLayout({ children }) {
-  const [user, setUser] = useState({});
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [user, setUser] = useState({ username: "", email: "" });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useLayoutEffect(() => {
-    function popUlate() {
-      instance.accountDetails().then((d) => {
-        setUser(d);
-        setIsLoggedIn(true)
-      }).catch(() => {
-        setIsLoggedIn(false)
-      });
+    async function popUlate() {
+      setLoading(true);
+      setIsLoggedIn(await auth.isLoggedIn());
+      setUser(await auth.currentUser());
+      setLoading(false);
     }
     popUlate();
   }, []);
-
 
   return (
     <ThemeProvider>
@@ -36,15 +34,23 @@ export default function ClientLayout({ children }) {
       />
       <div className="flex justify-between w-full items-center p-2">
         <h2>
-          {isLoggedIn ? `${user.name} - ${user.email}` : ""}
+          {loading ? (
+            <span className="inline-block h-6 w-48 bg-gray-300 dark:bg-gray-700 rounded animate-pulse"></span>
+          ) : isLoggedIn ? (
+            `${user.username} - ${user.email}`
+          ) : (
+            ""
+          )}
         </h2>
-        {isLoggedIn ? (
+        {loading ? (
+          <span className="inline-block h-8 w-20 bg-gray-300 dark:bg-gray-700 rounded animate-pulse"></span>
+        ) : isLoggedIn ? (
           <a
             className="text-blue-500 hover:text-blue-300 hover:cursor-pointer"
-            onClick={() => {
-              instance.logout();
+            onClick={async () => {
+              await auth.logout();
               setUser({});
-              setIsLoggedIn(false)
+              setIsLoggedIn(false);
             }}
           >
             Logout

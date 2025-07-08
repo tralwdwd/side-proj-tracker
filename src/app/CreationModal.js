@@ -1,10 +1,7 @@
 'use client'
 import React, { useState } from 'react';
-import Image from 'next/image'
 import { toast } from 'react-hot-toast';
-import { v4 as uuidv4 } from 'uuid';
-import { instance } from './auth';
-import { ID, Permission, Role } from "appwrite";
+import { auth, data } from './apiclient';
 
 const CreationModal = ({ refreshProjects, isModalVisible, onDismiss }) => {
   const [projectName, setProjectName] = useState('')
@@ -13,24 +10,9 @@ const CreationModal = ({ refreshProjects, isModalVisible, onDismiss }) => {
 
   const handleCreate = async () =>{
     if(projectName.trim() !== '' && projectDescription.trim() !== ''){
-      let a = await instance.account.get()
-      await instance.databases.createDocument(
-        "public",
-        "projects",
-        ID.unique(),
-        {
-          user_id: a.$id,
-          name: projectName,
-          description: projectDescription,
-        },
-        [
-          Permission.read(Role.user(a.$id)),
-          Permission.update(Role.user(a.$id)),
-          Permission.delete(Role.user(a.$id))
-        ]
-      )
-      refreshProjects();
+      await data.newProject(projectName, projectDescription)
       dissmissActions();
+      refreshProjects();
       toast.success('Project "'+ projectName + '" created successfully');
     }else {
         toast["error"]('Please fill in all the fields');
@@ -40,6 +22,7 @@ const CreationModal = ({ refreshProjects, isModalVisible, onDismiss }) => {
     setProjectName('');
     setProjectDescription('');
     onDismiss();
+    refreshProjects()
   }
   return (
     <div>

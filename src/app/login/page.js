@@ -1,9 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import { account, client, instance } from "../auth";
-import { AuthError } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 import  Link  from "next/link"
+import { auth } from "../apiclient";
 
 
 export default function Login() {
@@ -14,18 +13,17 @@ export default function Login() {
 
     useEffect(()=>{
         async function getSession() {
-            instance.isLoggedIn().then(
-                (r) =>{
+                let r = await auth.isLoggedIn() 
                     if(r) {
                         setIsLoggedIn(true)
-                        window.location.replace("/")
+                        //window.location.replace("/")
                     }
                     else {
                         setIsLoggedIn(false)
                     }
                 }
-            )
-        }
+            
+        
         getSession()
     }, [])
     if (isLoggedIn) {
@@ -39,11 +37,12 @@ export default function Login() {
             <input type="text" className="w-full h-10 px-2 rounded-md dark:bg-gray-700 bg-neutral-300 dark:text-white " placeholder='Email' value={username} onChange={(n)=> setUsername(n.target.value)}/>
             <input type="password" className="w-full h-10 px-2 mt-2 rounded-md dark:bg-gray-700 bg-neutral-300 dark:text-white " placeholder='Password' value={password} onChange={(d)=>setPassword(d.target.value)}/>
             <button type='button' className='w-full h-10 mt-2 rounded-md bg-blue-500 text-white font-medium cursor-pointer' onClick={async () =>{
-                instance.login(username, password).then((u)=>{
-                    if(u != null) {
-                        setError(u.message)
-                    }
-                })
+                let r = await auth.login(username, password)
+                if(r.status !== 200) {
+                    setError(r.message)
+                } else {
+                    redirect("/")
+                }
               
             }}>Login</button>
             <h4 className="mt-2">No account? <Link className="text-blue-500 hover:text-blue-300 hover:cursor-pointer" href={"/signup"}>Sign Up</Link></h4>
