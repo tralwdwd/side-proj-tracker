@@ -7,4 +7,4 @@ It uses authentication for saving and fetching your projects!
 You can add a title and a description to easily find your project!
 
 
-New backend version is up for beta. Public beta is up at [this link](https://newbackend.projects.tralwdwd.dev?_vercel_share=FVV8wKRU09jdxIUhh0xJXtm7TrCyMPv3). Note it is still unstable for now.
+New backend version is up in production.
