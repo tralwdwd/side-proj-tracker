@@ -18,7 +18,7 @@ const request = async (url, method = "GET", body = null) => {
 
 const auth = {
     signUp: async (email, username, password, redirect = true) => {
-        const {res, status} = await request("/auth/signup", "POST", {
+        const {res, status} = await request("/auth/newuser", "POST", {
             email,
             username,
             password,
